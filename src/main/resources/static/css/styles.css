@@ -1,0 +1,131 @@
+/* ===== Estilos globales ===== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Login ===== */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e90ff, #a678de);
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 1.5rem;
+    color: #1e90ff;
+    font-size: 1.8rem;
+}
+
+/* Campos de formulario */
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.4);
+}
+
+/* Botón login */
+.btn-login {
+    background: linear-gradient(135deg, #1e90ff, #a678de);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* Mensajes */
+.error-msg p {
+    color: #ff3b3b;
+    font-size: 0.9rem;
+}
+
+.logout-msg p {
+    color: #28a745;
+    font-size: 0.9rem;
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 30px;
+}
+
+.buttons .btn {
+    padding: 12px 20px;
+    margin: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-primary {
+    background: #1e90ff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #176ac9;
+}
+
+.btn-secondary {
+    background: #a678de;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #8b5fc2;
+}

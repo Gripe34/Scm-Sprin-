@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="
+http://www.thymeleaf.org/
+" th:replace="layout/base :: layout( 'Listado de Usuarios', ~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section th:fragment="content">
+    <div class="container mt-5">
+        <h2 class="mb-4">Listado de Actividades</h2>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id Actividad</th>
+                <th>Id Médico</th>
+                <th>Veterinarios</th>
+                <th>Descripción</th>
+                <th>Tipo Actividad</th>
+                <th>Foto</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="actividad : ${actividades}">
+                <td th:text="${actividad.idActividad}">1</td>
+                <td th:text="${actividad.medico.idMedico}">1</td>
+                <td th:text="${actividad.medico.nombre} + ' ' + ${actividad.medico.apellidos}">Dr. Juan Pérez</td>
+                <td th:text="${actividad.descripcion}">Consulta general</td>
+                <td th:text="${actividad.tipoActividad}">Consulta</td>
+                <td>
+                    <img th:if="${actividad.foto != null}" th:src="@{'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(actividad.foto)}}" alt="Foto" style="max-width: 100px; max-height: 100px;"/>
+                    <span th:if="${actividad.foto == null}">No disponible</span>
+                </td>
+
+                <td>
+                 <a th:href="@{'/actividades/edit/' + ${actividad.idActividad}}" class="btn btn-primary btn-sm">Editar</a>
+                  <a th:href="@{'/actividades/delete/' + ${actividad.idActividad}}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta actividad?');">Eliminar</a>
+                </td>
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+</body>
+</html>

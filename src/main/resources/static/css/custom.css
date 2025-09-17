@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<div th:fragment="header" xmlns:th="
+http://www.w3.org/1999/xhtml
+">
+    <header class="mb-4">
+        <nav class="navbar navbar-light bg-light rounded shadow-sm">
+            <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1" th:text="${pageTitle} ?: 'Panel de Control'">
+          Panel de Control
+        </span>
+            </div>
+        </nav>
+    </header>
+</div>
+
