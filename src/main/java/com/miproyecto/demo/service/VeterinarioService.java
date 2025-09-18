@@ -22,4 +22,5 @@ public interface VeterinarioService {
     //ELIMINAR VETERINARIOS POR ID
     void deleteVeterinario(Long idVeterinario);
 
+
 }

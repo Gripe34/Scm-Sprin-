@@ -1,10 +1,16 @@
 package com.miproyecto.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "diagnostico_dueno")
+
+@Getter // Lombok genera TODOS los getters
+@Setter
 public class DiagnosticoDueno {
 
     @Id
@@ -20,9 +26,6 @@ public class DiagnosticoDueno {
     @JoinColumn(name = "id_veterinarios", nullable = false)
     private Veterinarios veterinario;
 
-    // Si Medico es entidad: @ManyToOne
-    @Column(name = "id_medico")
-    private Long idMedico;
 
     @Column(name = "fecha_diagnostico", nullable = false)
     private LocalDate fechaDiagnostico;
@@ -45,9 +48,7 @@ public class DiagnosticoDueno {
         this.mascota = mascotas;
     }
 
-    public void setIdMedico(Long idMedico) {
-        this.idMedico = idMedico;
-    }
+
 
     public void setFechaDiagnostico(LocalDate fechaDiagnostico) {
         this.fechaDiagnostico = fechaDiagnostico;

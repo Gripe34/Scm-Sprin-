@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="barralateralV" class="container-menu">
+    <div class="cont-menu">
+        <label for="btn-menu">✖️</label>
+        <nav>
+
+
+            <ul class="nav flex-column mt-3">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/diagnostico/listar}">Diagnósticos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/citas}">Citas</a>
+                </li>
+                <li class="nav-item mt-3">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

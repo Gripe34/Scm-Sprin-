@@ -25,7 +25,5 @@ public class CitasDTO {
 
     private Long idDiagnostico;
 
-    public Long getIdCita() {
-        return idCita;
-    }
+
 }

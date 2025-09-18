@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -41,10 +42,26 @@ public class VeterinariosServiceImpl implements VeterinarioService {
 
     @Override
     public List<VeterinariosDTO> findAllVeterinarios() {
-        List<Veterinarios> veterinarios = veterinarioRepository.findAll();
-        return veterinarios.stream()
-                .map(v -> modelMapper.map(v, VeterinariosDTO.class))
-                .toList(); // en Java 16+, o usa Collectors.toList() si necesitas modificable
+        return veterinarioRepository.findAll().stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+
+    private VeterinariosDTO convertirADTO(Veterinarios veterinario) {
+        VeterinariosDTO dto = new VeterinariosDTO();
+        dto.setIdVeterinario(veterinario.getIdVeterinario());
+        dto.setEspecialidad(veterinario.getEspecialidad());
+
+        if (veterinario.getUsuario() != null) {
+            Usuarios usuario = veterinario.getUsuario();
+            dto.setNombre(usuario.getNombre());
+            dto.setApellido(usuario.getApellido());
+            dto.setIdUsuario(usuario.getIdUsuario());
+            dto.setCorreo(usuario.getCorreo());
+            dto.setTelefono(usuario.getTelefono());
+            dto.setDireccion(usuario.getDireccion());
+        }
+        return dto;
     }
 
     @Override
@@ -79,7 +96,7 @@ public class VeterinariosServiceImpl implements VeterinarioService {
         Veterinarios veterinarioExistente = veterinarioRepository.findById(idVeterinario)
                 .orElseThrow(() -> new CustomException(VETERINARIO_NOT_FOUND + idVeterinario));
 
-        veterinarioExistente.setNombre(veterinariosDTO.getNombre());
+
         veterinarioExistente.setEspecialidad(veterinariosDTO.getEspecialidad());
         veterinarioExistente = veterinarioRepository.save(veterinarioExistente);
         return modelMapper.map(veterinarioExistente, VeterinariosDTO.class);

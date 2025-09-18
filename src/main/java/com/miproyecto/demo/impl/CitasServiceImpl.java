@@ -14,6 +14,7 @@ import com.miproyecto.demo.service.CitasService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,14 +57,38 @@ public class CitasServiceImpl implements CitasService {
                 .orElseThrow(() -> new CustomException("Cita no encontrada con id:" + idCita));
     }
 
+    // En tu archivo CitasServiceImpl.java
+
     @Override
+    @Transactional
     public CitasDTO crearCitas(CitasDTO citasDTO) {
-        if (citasDTO.getIdCita() != null && citasRepository.existsById(citasDTO.getIdCita())) {
-            throw new CustomException("El id ya existe");
-        }
-        Citas cita = modelMapper.map(citasDTO, Citas.class);
-        cita = citasRepository.save(cita);
-        return modelMapper.map(cita, CitasDTO.class);
+        // 1. Buscar las entidades relacionadas...
+        Mascotas mascota = mascotasRepository.findById(citasDTO.getIdMascota())
+                .orElseThrow(() -> new CustomException("Mascota no encontrada..."));
+
+        Veterinarios veterinario = veterinarioRepository.findById(citasDTO.getIdVeterinario())
+                .orElseThrow(() -> new CustomException("Veterinario no encontrado..."));
+
+        DiagnosticoDueno diagnostico = diagnosticoRepository.findById(citasDTO.getIdDiagnostico())
+                .orElseThrow(() -> new CustomException("Diagnóstico no encontrado..."));
+
+        // 2. Mapear los datos del DTO a la entidad
+        Citas nuevaCita = modelMapper.map(citasDTO, Citas.class);
+
+        // 3. Establecer las relaciones...
+        nuevaCita.setMascota(mascota);
+        nuevaCita.setVeterinario(veterinario);
+        nuevaCita.setDiagnostico(diagnostico);
+
+        // 4. *** LA SOLUCIÓN ESTÁ AQUÍ ***
+        //    Asignar un estado por defecto antes de guardar.
+        nuevaCita.setEstadoCita("Pendiente");
+
+        // 5. Guardar la nueva cita...
+        Citas citaGuardada = citasRepository.save(nuevaCita);
+
+        // 6. Devolver el DTO...
+        return modelMapper.map(citaGuardada, CitasDTO.class);
     }
 
     @Override

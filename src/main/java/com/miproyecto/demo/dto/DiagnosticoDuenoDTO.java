@@ -13,15 +13,14 @@ public class DiagnosticoDuenoDTO {
 
     private Long idDiagnostico;
 
-    private Long idCitas;
+
 
     private Long idMascota;
-
-    private Long idMedico;
 
     private Long idVeterinarios;
 
     private LocalDate fechaDiagnostico;
-
+    private String nombreMascota;
+    private String nombreDueno;
     private String observaciones;
 }
