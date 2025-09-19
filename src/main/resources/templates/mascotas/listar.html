@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body style="background: #fff; color: #000;">
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
+<!-- Barra lateral -->
+<!-- Barra lateral + Modal -->
+<div th:replace="~{fragments/barralateralD :: barralateralD}"></div>
+
+<div th:replace="~{fragments/barralateralD :: modalDiagnostico(
+        diagnosticoDTO=${diagnosticoDTO},
+        mascotas=${mascotas},
+        veterinarios=${veterinarios}
+    )}"></div>>
 
 
 

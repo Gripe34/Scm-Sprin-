@@ -10,7 +10,17 @@
 </head>
 <body>
 
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
+<!-- Barra lateral -->
+<!-- Barra lateral + Modal -->
+<div th:replace="~{fragments/barralateralD :: barralateralD}"></div>
 
+<div th:replace="~{fragments/barralateralD :: modalDiagnostico(
+        diagnosticoDTO=${diagnosticoDTO},
+        mascotas=${mascotas},
+        veterinarios=${veterinarios}
+    )}"></div>>
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">

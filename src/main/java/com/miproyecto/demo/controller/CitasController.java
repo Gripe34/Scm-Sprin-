@@ -1,10 +1,14 @@
 package com.miproyecto.demo.controller;
 
 import com.miproyecto.demo.dto.CitasDTO;
+import com.miproyecto.demo.entity.Usuarios;
+import com.miproyecto.demo.entity.Veterinarios;
 import com.miproyecto.demo.service.CitasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -14,10 +18,14 @@ import java.util.List;
 public class CitasController {
 
     private final CitasService citasService;
+    private final com.miproyecto.demo.repository.UsuariosRepository usuariosRepository;
+    private final com.miproyecto.demo.repository.VeterinarioRepository veterinariosRepository;
 
     @Autowired
-    public CitasController(CitasService citasService) {
+    public CitasController(CitasService citasService, com.miproyecto.demo.repository.UsuariosRepository usuariosRepository, com.miproyecto.demo.repository.VeterinarioRepository veterinariosRepository) {
         this.citasService = citasService;
+        this.usuariosRepository = usuariosRepository;
+        this.veterinariosRepository = veterinariosRepository;
     }
 
     // Obtener todas las citas
@@ -77,6 +85,23 @@ public class CitasController {
 
         // Redirige a la lista de diagnósticos, donde estaba el usuario
         return "redirect:/diagnostico/listar";
+    }
+
+    // MÉTODO NUEVO PARA LISTAR
+    @GetMapping("/citas/listar")
+    public String listarCitasVeterinario(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Usuarios usuario = usuariosRepository.findBycorreo(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Veterinarios veterinario = veterinariosRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Perfil de veterinario no encontrado"));
+
+        List<CitasDTO> citas = citasService.findCitasByVeterinario(veterinario);
+
+        model.addAttribute("listaCitas", citas);
+
+        return "veterinarios/listar"; // El nombre de tu vista
     }
 
 }

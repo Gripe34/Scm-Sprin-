@@ -2,6 +2,7 @@ package com.miproyecto.demo.controller;
 
 import com.miproyecto.demo.dto.DiagnosticoDuenoDTO;
 import com.miproyecto.demo.dto.MascotasDTO;
+import com.miproyecto.demo.dto.VeterinariosDTO;
 import com.miproyecto.demo.entity.Usuarios;
 import com.miproyecto.demo.repository.UsuariosRepository;
 import com.miproyecto.demo.service.MascotasService;
@@ -21,11 +22,38 @@ public class MascotasController {
 
     private final MascotasService mascotasService;
     private  final UsuariosRepository usuariosRepository;
+    private final com.miproyecto.demo.service.VeterinarioService veterinarioService;
 
     @Autowired
-    public MascotasController(MascotasService mascotasService, UsuariosRepository usuariosRepository) {
+    public MascotasController(MascotasService mascotasService, UsuariosRepository usuariosRepository, com.miproyecto.demo.service.VeterinarioService veterinarioService) {
         this.mascotasService = mascotasService;
         this.usuariosRepository = usuariosRepository;
+        this.veterinarioService = veterinarioService;
+    }
+    @ModelAttribute
+    public void addCommonAttributes(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            Usuarios usuario = usuariosRepository.findBycorreo(email)
+                    .orElse(null);
+
+            if (usuario != null) {
+                // Añade el usuario logueado
+                model.addAttribute("usuario", usuario);
+                model.addAttribute("logueado", true);
+
+                // Añade la lista de mascotas del usuario
+                List<MascotasDTO> mascotasDelUsuario = mascotasService.obtenerMascotasPorDuenoId(usuario.getIdUsuario());
+                model.addAttribute("mascotas", mascotasDelUsuario);
+            }
+
+            // Añade la lista de todos los veterinarios
+            List<VeterinariosDTO> veterinarios = veterinarioService.findAllVeterinarios();
+            model.addAttribute("veterinarios", veterinarios);
+
+            // Añade el DTO vacío para el modal de diagnóstico
+            model.addAttribute("diagnosticoDTO", new DiagnosticoDuenoDTO());
+        }
     }
 
     // Obtener todas las mascotas

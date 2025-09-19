@@ -1,10 +1,7 @@
 package com.miproyecto.demo.impl;
 
 import com.miproyecto.demo.dto.CitasDTO;
-import com.miproyecto.demo.entity.Citas;
-import com.miproyecto.demo.entity.Mascotas;
-import com.miproyecto.demo.entity.Veterinarios;
-import com.miproyecto.demo.entity.DiagnosticoDueno;
+import com.miproyecto.demo.entity.*;
 import com.miproyecto.demo.exceptions.CustomException;
 import com.miproyecto.demo.repository.CitasRepository;
 import com.miproyecto.demo.repository.MascotasRepository;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CitasServiceImpl implements CitasService {
@@ -130,4 +128,35 @@ public class CitasServiceImpl implements CitasService {
                 .orElseThrow(() -> new CustomException("Cita no encontrada con id:" + idCita));
         citasRepository.delete(citaExistente);
     }
+    // MÉTODO NUEVO para buscar por veterinario
+    @Override
+    public List<CitasDTO> findCitasByVeterinario(Veterinarios veterinario) {
+        List<Citas> citas = citasRepository.findByVeterinario(veterinario);
+        return citas.stream()
+                .map(this::convertirADTO) // Reutilizamos un helper
+                .collect(Collectors.toList());
+    }
+
+    // MÉTODO HELPER para convertir a DTO enriquecido
+    private CitasDTO convertirADTO(Citas cita) {
+        CitasDTO dto = modelMapper.map(cita, CitasDTO.class);
+
+        if (cita.getMascota() != null) {
+            dto.setNombreMascota(cita.getMascota().getNombre());
+
+            if (cita.getMascota().getUsuario() != null) {
+                Usuarios dueno = cita.getMascota().getUsuario();
+                dto.setNombreDueno(dueno.getNombre() + " " + dueno.getApellido());
+            }
+        }
+        return dto;
+    }
+    @Override
+    public List<CitasDTO> findCitasByCliente(Usuarios cliente) {
+        List<Citas> citas = citasRepository.findByMascota_Usuario(cliente);
+        return citas.stream()
+                .map(this::convertirADTO) // Reutilizamos el mismo método de conversión
+                .collect(Collectors.toList());
+    }
+
 }
