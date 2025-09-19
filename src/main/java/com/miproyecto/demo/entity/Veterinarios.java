@@ -61,4 +61,5 @@ public class Veterinarios {
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
     }
+
 }

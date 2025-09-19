@@ -17,4 +17,5 @@ public interface DietasService {
 
     void deleteDietas(Long idDieta);
 
+    List<DietasDTO> findDietasByMascotaId(Long idMascota);
 }

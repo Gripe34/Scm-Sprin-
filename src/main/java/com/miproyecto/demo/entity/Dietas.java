@@ -1,9 +1,13 @@
 package com.miproyecto.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter; // Importante
+import lombok.Setter; // Importante
 
 @Entity
 @Table(name = "dietas")
+@Getter // Lombok genera TODOS los getters
+@Setter // Lombok genera TODOS los setters
 public class Dietas {
 
     @Id
@@ -17,7 +21,7 @@ public class Dietas {
 
     @ManyToOne
     @JoinColumn(name = "id_mascota", nullable = false)
-    private Mascotas mascota;
+    private Mascotas mascota; // <-- El campo que causaba el error
 
     @Column(name = "Descripcion", nullable = false, length = 255)
     private String descripcion;
@@ -28,44 +32,5 @@ public class Dietas {
     @Column(name = "Dieta", nullable = false, length = 255)
     private String dieta;
 
-    // --- Getters y Setters ---
-    public Long getIdDieta() {
-        return idDieta;
-    }
-
-    public void setIdDieta(Long idDieta) {
-        this.idDieta = idDieta;
-    }
-
-    public Veterinarios getVeterinario() {
-        return veterinario;
-    }
-
-    public void setVeterinario(Veterinarios veterinario) {
-        this.veterinario = veterinario;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getTipoDieta() {
-        return tipoDieta;
-    }
-
-    public void setTipoDieta(String tipoDieta) {
-        this.tipoDieta = tipoDieta;
-    }
-
-    public String getDieta() {
-        return dieta;
-    }
-
-    public void setDieta(String dieta) {
-        this.dieta = dieta;
-    }
+    // --- ¡YA NO NECESITAS ESCRIBIR NINGÚN GETTER O SETTER AQUÍ! ---
 }

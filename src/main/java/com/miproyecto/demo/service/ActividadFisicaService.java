@@ -17,5 +17,6 @@ public interface ActividadFisicaService {
 
     void deleteActividadFisica( Long idActividadF);
 
+    List<ActividadFisicaDTO> findActividadesByMascotaId(Long idMascota);
 }
 

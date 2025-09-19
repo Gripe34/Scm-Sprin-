@@ -11,7 +11,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // ⚡ Servir los archivos desde la carpeta local "uploads"
+        // Esto crea la URL pública "/uploads/**" que apunta a la carpeta física "uploads/"
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }

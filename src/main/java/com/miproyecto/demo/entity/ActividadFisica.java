@@ -25,4 +25,8 @@ public class ActividadFisica {
 
     @Column(name = "foto", nullable = false, length = 255)
     private String foto;
+    @ManyToOne
+    @JoinColumn(name = "id_mascota", nullable = false)
+    private Mascotas mascota;
+
 }

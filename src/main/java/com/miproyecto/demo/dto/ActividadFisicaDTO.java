@@ -1,8 +1,10 @@
 package com.miproyecto.demo.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data // Esta anotación incluye @Getter, @Setter, @ToString, etc. para todos los campos.
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActividadFisicaDTO {
@@ -13,46 +15,8 @@ public class ActividadFisicaDTO {
     private String tipoActividad;
     private String foto;
 
-    // Getters y Setters
-
-    public Long getIdActividadF() {
-        return idActividadF;
-    }
-
-    public void setIdActividadF(Long idActividadF) {
-        this.idActividadF = idActividadF;
-    }
-
-
-    public Long getIdVeterinario() {
-        return idVeterinario;
-    }
-
-    public void setIdVeterinario(Long idVeterinario) {
-        this.idVeterinario = idVeterinario;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getTipoActividad() {
-        return tipoActividad;
-    }
-
-    public void setTipoActividad(String tipoActividad) {
-        this.tipoActividad = tipoActividad;
-    }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
+    // Campos integrados correctamente en la clase
+    private Long idMascota;
+    private String nombreMascota;
+    private String nombreVeterinario;
 }
