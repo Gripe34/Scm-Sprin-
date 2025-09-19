@@ -1,5 +1,3 @@
-
-
 <div th:fragment="barralateralD" class="container-menu p-3">
     <div class="cont-menu">
         <label for="btn-menu" class="d-block mb-2">✖️</label>
@@ -23,6 +21,19 @@
                     <li><a class="dropdown-item" th:href="@{/mascotas/listar}">Mis Mascotas</a></li>
                     <li><a class="dropdown-item" th:href="@{/mascotas/crear}">Agregar Mascota</a></li>
                 </ul>
+            </li>
+
+            <li class="nav-item mb-2">
+                <a class="nav-link btn btn-outline-primary w-100 text-start"
+                   th:href="@{/dietas/seleccionar-mascota}">
+                    <i class="fas fa-utensils me-2"></i>Consultar Dietas
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link btn btn-outline-primary w-100 text-start"
+                   th:href="@{/actividades/seleccionar-mascota}">
+                    <i class="fas fa-running me-2"></i>Consultar Actividades
+                </a>
             </li>
 
             <li class="nav-item mt-auto">
@@ -92,4 +103,3 @@
         </div>
     </div>
 </div>
-

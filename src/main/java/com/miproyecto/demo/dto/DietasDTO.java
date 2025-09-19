@@ -15,5 +15,7 @@ public class DietasDTO {
     private String descripcion;
     private String tipoDieta;
     private String dieta;
+    private String nombreMascota;
+    private String nombreVeterinario;
 
 }
