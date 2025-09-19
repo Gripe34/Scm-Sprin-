@@ -17,7 +17,7 @@ public class ScmApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        String passwordPlano = "1234";
+        String passwordPlano = "admin1234";
         String passwordHasheado = passwordEncoder.encode(passwordPlano);
 
         System.out.println("=============================================================");

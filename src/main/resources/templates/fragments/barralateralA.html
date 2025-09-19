@@ -1,0 +1,40 @@
+<div th:fragment="barralateralA" class="container-menu p-3">
+    <div class="cont-menu">
+        <label for="btn-menu" class="d-block mb-2">✖️</label>
+
+        <li class="nav-item mb-2">
+            <a class="nav-link w-100 text-start" href="#"> <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </a>
+        </li>
+
+
+            <li class="nav-item dropdown mb-2">
+                <button class="btn btn-outline-secondary w-100 dropdown-toggle text-start"
+                        type="button" id="dropdownGestion" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-tasks me-2"></i>Gestionar
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="dropdownGestion">
+                    <li><a class="dropdown-item" th:href="@{/admin/gestionar-usuarios}">Usuarios</a></li>
+                    <li><a class="dropdown-item" th:href="@{/admin/gestionar-mascotas}">Mascotas</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item mb-2">
+                <a class="nav-link btn btn-outline-primary w-100 text-start" th:href="@{/admin/ver-citas}">
+                    <i class="far fa-calendar-alt me-2"></i>Ver Todas las Citas
+                </a>
+            </li>
+
+            <li class="nav-item mt-auto">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-danger w-100 text-start">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div th:fragment="modalDiagnostico(diagnosticoDTO, mascotas, veterinarios)">
+</div>
