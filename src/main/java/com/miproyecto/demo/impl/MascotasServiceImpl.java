@@ -134,6 +134,11 @@ public class MascotasServiceImpl implements MascotasService {
         return mascotasRepository.findAll().stream().map(this::convertirADTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<MascotasDTO> findPacientesByVeterinarioId(Long idVeterinario) {
+        return List.of();
+    }
+
     private MascotasDTO convertirADTO(Mascotas mascota) {
         MascotasDTO dto = modelMapper.map(mascota, MascotasDTO.class);
         if (mascota.getUsuario() != null) {

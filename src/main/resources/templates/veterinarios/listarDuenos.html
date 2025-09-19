@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Dueño</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/stilos.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<div th:replace="~{fragments/barralateralV :: barralateralV}"></div>
+
+<main class="container mt-5">
+    <h1 class="section-title h1 mb-4">Seleccionar Dueño de Paciente</h1>
+
+    <div class="mb-4">
+        <a th:href="@{/veterinarios/index}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-2"></i>Volver al Panel Principal
+        </a>
+    </div>
+
+    <div class="list-group shadow-sm">
+        <a th:each="dueno : ${duenos}" th:href="@{/gestion/{tipo}/duenos/{id}(tipo=${tipoGestion}, id=${dueno.idUsuario})}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span th:text="${dueno.nombre} + ' ' + ${dueno.apellido}"></span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <div th:if="${#lists.isEmpty(duenos)}" class="list-group-item">
+            No tienes pacientes asignados todavía.
+        </div>
+    </div>
+</main>
+</body>
+</html>

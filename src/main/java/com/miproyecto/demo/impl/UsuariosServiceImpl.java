@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -100,4 +101,14 @@ public class UsuariosServiceImpl implements UsuariosService{
                 .orElseThrow(() -> new CustomException("Usuario no encontrado con id:" + idUsuarios));
         usuariosRepository.delete(usuarioExistente);
     }
-}
+
+    @Override
+    public List<UsuariosDTO> findDuenosByVeterinarioId(Long idVeterinario) {
+        // Llama al método del repositorio
+        List<Usuarios> duenos = usuariosRepository.findDuenosByVeterinarioId(idVeterinario);
+
+        // Mapea los resultados a DTOs
+        return duenos.stream()
+                .map(dueno -> modelMapper.map(dueno, UsuariosDTO.class))
+                .collect(Collectors.toList());
+    }}

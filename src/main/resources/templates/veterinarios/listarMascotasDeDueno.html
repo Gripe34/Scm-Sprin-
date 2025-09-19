@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Mascota</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/stilos.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<div th:replace="~{fragments/barralateralV :: barralateralV}"></div>
+
+<main class="container mt-5">
+    <h1 class="section-title h1 mb-4">Seleccionar Mascota</h1>
+
+    <div class="mb-4">
+        <a th:href="@{/gestion/{tipo}/duenos(tipo=${tipoGestion})}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-2"></i>Volver a la Lista de Dueños
+        </a>
+    </div>
+
+    <div class="page-cards-container">
+        <div th:each="mascota : ${mascotas}" class="page-card">
+            <img th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}" th:alt="'Foto de ' + ${mascota.nombre}">
+            <div class="page-card-body">
+                <h4 th:text="${mascota.nombre}"></h4>
+                <p th:text="'Raza: ' + ${mascota.raza}"></p>
+                <a th:if="${tipoGestion == 'dietas'}" th:href="@{/gestion/dietas/crear/{id}(id=${mascota.idMascota})}" class="btn btn-primary">Crear Dieta</a>
+                <a th:if="${tipoGestion == 'actividades'}" th:href="@{/gestion/actividades/crear/{id}(id=${mascota.idMascota})}" class="btn btn-primary">Crear Actividad</a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
