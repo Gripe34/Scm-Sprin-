@@ -29,7 +29,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                 redirectURL += "/cliente/index";
                 break;
             } else if (role.equals("veterinario")) {
-                redirectURL += "/veterinarios/index";
+                redirectURL += "/veterinarios/dashboard";
                 break;
             } else if (role.equals("administrador")) {
                 redirectURL += "/admin/index";

@@ -7,6 +7,7 @@ import com.miproyecto.demo.entity.Usuarios;
 import com.miproyecto.demo.entity.Veterinarios;
 import com.miproyecto.demo.exceptions.CustomException;
 import com.miproyecto.demo.repository.RolesRepository;
+import com.miproyecto.demo.repository.UsuariosRepository;
 import com.miproyecto.demo.repository.VeterinarioRepository;
 import com.miproyecto.demo.service.UsuariosService;
 import com.miproyecto.demo.service.VeterinarioService;
@@ -29,14 +30,16 @@ public class VeterinariosServiceImpl implements VeterinarioService {
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
     private final UsuariosService usuariosService;
+    private UsuariosRepository usuariosRepository;
 
     @Autowired
-    public VeterinariosServiceImpl(VeterinarioRepository veterinarioRepository, ModelMapper modelMapper, UsuariosService usuariosService, PasswordEncoder passwordEncoder, RolesRepository rolesRepository){
+    public VeterinariosServiceImpl(VeterinarioRepository veterinarioRepository, ModelMapper modelMapper, UsuariosService usuariosService, PasswordEncoder passwordEncoder, RolesRepository rolesRepository,UsuariosRepository usuariosRepository){
         this.veterinarioRepository = veterinarioRepository;
         this.modelMapper = modelMapper;
         this.usuariosService = usuariosService;
         this.passwordEncoder = passwordEncoder;
         this.rolesRepository = rolesRepository;
+        this.usuariosRepository = usuariosRepository;
     }
 
     @Override
@@ -57,20 +60,35 @@ public class VeterinariosServiceImpl implements VeterinarioService {
     @Override
     public VeterinariosDTO crearVeterinario(VeterinariosDTO veterinariosDTO) {
 
-        UsuariosDTO usuarioDTO = new UsuariosDTO();
-        usuarioDTO.setCorreo(veterinariosDTO.getCorreo());
-        usuarioDTO.setContrasena(passwordEncoder.encode(veterinariosDTO.getContrasena()));
+        // 1. Crear y guardar el objeto Usuario
+        Usuarios usuario = new Usuarios();
+        usuario.setCorreo(veterinariosDTO.getCorreo());
+        usuario.setContrasena(passwordEncoder.encode(veterinariosDTO.getContrasena()));
+        usuario.setNombre(veterinariosDTO.getNombre());
+        usuario.setApellido(veterinariosDTO.getApellido());
+        usuario.setTelefono(veterinariosDTO.getTelefono());
+        usuario.setDireccion(veterinariosDTO.getDireccion());
 
-
+        // Asignar el rol 'veterinario'
         Roles rolVeterinario = rolesRepository.findByRol("veterinario")
                 .orElseThrow(() -> new CustomException("El rol 'veterinario' no existe"));
-        usuarioDTO.setIdRol(rolVeterinario.getIdRol());
-        UsuariosDTO usuarioCreado = usuariosService.crearUsuario(usuarioDTO);
+        usuario.setRol(rolVeterinario);
 
-        Veterinarios veterinario = modelMapper.map(veterinariosDTO, Veterinarios.class);
-        veterinario.setUsuario(modelMapper.map(usuarioCreado, Usuarios.class));
+        // Guardar el usuario primero en su repositorio
+        Usuarios usuarioGuardado = usuariosRepository.save(usuario);
+
+        // 2. Crear y guardar el objeto Veterinario
+        // Solo se setean los campos que están en la entidad Veterinarios
+        Veterinarios veterinario = new Veterinarios();
+        veterinario.setEspecialidad(veterinariosDTO.getEspecialidad());
+
+        // Enlazar el usuario recién guardado
+        veterinario.setUsuario(usuarioGuardado);
+
+        // Guardar la entidad Veterinario
         Veterinarios veterinarioGuardado = veterinarioRepository.save(veterinario);
 
+        // 3. Devolver el DTO
         return modelMapper.map(veterinarioGuardado, VeterinariosDTO.class);
     }
 

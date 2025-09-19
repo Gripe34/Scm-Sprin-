@@ -19,6 +19,10 @@ public class VeterinariosController {
     private final VeterinarioService veterinarioService;
 
 
+    @GetMapping("/dashboard")
+    public String inicioVeterinario() {
+        return "veterinarios/index";
+    }
 
     @Autowired
     public VeterinariosController(VeterinarioService veterinarioService) {
