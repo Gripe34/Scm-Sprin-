@@ -28,6 +28,19 @@ public class VeterinariosController {
     public VeterinariosController(VeterinarioService veterinarioService) {
         this.veterinarioService = veterinarioService;
     }
+    @GetMapping("/index") // Puedes usar "/index" o "/listar", como prefieras
+    public String mostrarIndexDeVeterinarios(Model model) {
+        // 1. Pide la lista completa de veterinarios al servicio.
+        List<VeterinariosDTO> listaDeVeterinarios = veterinarioService.findAllVeterinarios();
+
+        // 2. Agrega esa lista al modelo con el nombre "veterinarios".
+        //    Este es el nombre que tu HTML usará para acceder a los datos.
+        model.addAttribute("veterinarios", listaDeVeterinarios);
+
+        // 3. Devuelve el nombre del archivo HTML que quieres mostrar.
+        //    Esto cargará tu archivo en: templates/veterinarios/index.html
+        return "veterinarios/index";
+    }
 
     // Obtener todos los veterinarios
     @GetMapping("/all")

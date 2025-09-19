@@ -1,6 +1,8 @@
 package com.miproyecto.demo.service;
 
 import com.miproyecto.demo.dto.CitasDTO;
+import com.miproyecto.demo.entity.Usuarios;
+import com.miproyecto.demo.entity.Veterinarios;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface CitasService {
     CitasDTO updateCitas(Long idcita, CitasDTO citasDTO);
 
     void deleteCitas(long idCita);
+    List<CitasDTO> findCitasByVeterinario(Veterinarios veterinario);
+    List<CitasDTO> findCitasByCliente(Usuarios cliente);
 }

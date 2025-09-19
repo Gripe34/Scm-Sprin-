@@ -21,8 +21,8 @@ public class Citas {
     @JoinColumn(name = "id_veterinarios", nullable = false)
     private Veterinarios veterinario;
 
-    @OneToOne
-    @JoinColumn(name = "id_diagnostico", nullable = false, unique = true)
+    @ManyToOne // <-- CORREGIDO: Un diagnóstico puede tener muchas citas
+    @JoinColumn(name = "id_diagnostico", nullable = false)
     private DiagnosticoDueno diagnostico;
 
     @Column(name = "fecha_cita", nullable = false)

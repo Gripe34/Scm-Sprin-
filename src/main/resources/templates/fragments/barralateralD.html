@@ -1,0 +1,97 @@
+
+
+<div th:fragment="barralateralD" class="container-menu p-3">
+    <div class="cont-menu">
+        <label for="btn-menu" class="d-block mb-2">✖️</label>
+
+        <ul class="nav flex-column h-100">
+
+            <li class="nav-item mb-2">
+                <a class="nav-link btn btn-outline-primary w-100 text-start"
+                   href="#" data-bs-toggle="modal" data-bs-target="#diagnosticoModal">
+                    <i class="fas fa-notes-medical me-2"></i>Registrar Diagnóstico
+                </a>
+            </li>
+            <li><a class="dropdown-item" th:href="@{/cliente/mis-citas}">Citas</a></li>
+
+
+            <li class="nav-item dropdown mb-2">
+                <button class="btn btn-outline-secondary w-100 dropdown-toggle text-start"
+                        type="button" id="dropdownMascotas"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-paw me-2"></i>Mascotas
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMascotas">
+                    <li><a class="dropdown-item" th:href="@{/mascotas/listar}">Mis Mascotas</a></li>
+                    <li><a class="dropdown-item" th:href="@{/mascotas/crear}">Agregar Mascota</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item mt-auto">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-danger w-100 text-start">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div th:fragment="modalDiagnostico(diagnosticoDTO, mascotas, veterinarios)">
+    <div class="modal fade" id="diagnosticoModal" tabindex="-1" aria-labelledby="diagnosticoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg border-0">
+                <form th:object="${diagnosticoDTO}" th:action="@{/diagnosticos/crear}" method="post">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="diagnosticoModalLabel">Registrar Nuevo Diagnóstico</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" th:field="*{idDiagnostico}" />
+
+                        <div class="mb-3">
+                            <label for="mascotaId" class="form-label">Mascota</label>
+                            <select th:field="*{idMascota}" id="mascotaId" class="form-select" required>
+                                <option value="" disabled selected>Seleccione una mascota</option>
+                                <option th:each="mascota : ${mascotas}"
+                                        th:value="${mascota.idMascota}"
+                                        th:text="${mascota.nombre}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="veterinarioId" class="form-label">Veterinario</label>
+                            <select th:field="*{idVeterinarios}" id="veterinarioId" class="form-select" required>
+                                <option value="" disabled selected>Seleccione un veterinario</option>
+                                <option th:each="vet : ${veterinarios}"
+                                        th:value="${vet.idVeterinario}"
+                                        th:text="${vet.nombre} + ' ' + ${vet.apellido} + ' (' + ${vet.especialidad} + ')'">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fechaDiagnostico" class="form-label">Fecha del Diagnóstico</label>
+                            <input type="date" th:field="*{fechaDiagnostico}" id="fechaDiagnostico" class="form-control" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="observaciones" class="form-label">Observaciones</label>
+                            <textarea th:field="*{observaciones}" id="observaciones" class="form-control" rows="4" required placeholder="Describa los síntomas, tratamiento y recomendaciones..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Diagnóstico</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -25,7 +25,10 @@ public class CitasDTO {
 
     private Long idDiagnostico;
 
-    public Long getIdCita() {
-        return idCita;
-    }
+    // --- CAMPOS NUEVOS PARA LA VISTA ---
+    private String nombreMascota;
+    private String nombreDueno;
+    private String nombreVeterinario;
+
+
 }

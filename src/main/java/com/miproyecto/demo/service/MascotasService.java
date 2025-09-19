@@ -21,5 +21,7 @@ public interface MascotasService {
 
     //ELIMINAR MASCOTAS POR ID
     void deleteMascotas (Long idMascota);
-
+    List<MascotasDTO> obtenerMascotasPorDuenoId(Long duenoId);
+    MascotasDTO crearMascota(MascotasDTO mascotaDTO);
+    List<MascotasDTO>getAllMascotas();
 }

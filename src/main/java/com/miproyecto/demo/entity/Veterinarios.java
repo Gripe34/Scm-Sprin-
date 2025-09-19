@@ -15,8 +15,7 @@ public class Veterinarios {
     @OneToMany(mappedBy = "veterinario")
     private List<Citas> citas; // relación con la tabla citas
 
-    @Column(name = "Nombre", nullable = false, length = 100)
-    private String nombre;
+
 
 
     @Column(name = "Especialidad", nullable = false, length = 200)
@@ -35,9 +34,7 @@ public class Veterinarios {
         return citas;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+
 
     public String getEspecialidad() {
         return especialidad;
@@ -56,9 +53,6 @@ public class Veterinarios {
         this.citas = citas;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
