@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nueva Dieta</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/stilos.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
+<div th:replace="~{fragments/barralateralV :: barralateralV}"></div>
+
+<main class="container mt-5">
+    <div class="d-flex align-items-center mb-4">
+        <i class="fas fa-utensils fa-2x text-primary mr-3"></i>
+        <h1 class="section-title h1 mb-0">Crear Dieta para <span class="text-primary" th:text="${mascota.nombre}"></span></h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form th:action="@{/gestion/dietas/crear}" th:object="${dietaDTO}" method="post">
+                <input type="hidden" th:field="*{idMascota}" />
+                <input type="hidden" th:field="*{idVeterinario}" />
+
+                <div class="form-group mb-4">
+                    <label for="tipoDieta" class="font-weight-bold">Tipo de Dieta</label>
+                    <input type="text" id="tipoDieta" th:field="*{tipoDieta}" class="form-control" placeholder="Ej: Dieta blanda, para control de peso..." required>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="descripcion" class="font-weight-bold">Descripción General</label>
+                    <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="3" placeholder="Objetivo y consideraciones generales de la dieta." required></textarea>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="dieta" class="font-weight-bold">Plan de Alimentación Específico</label>
+                    <textarea id="dieta" th:field="*{dieta}" class="form-control" rows="5" placeholder="Ej: 100g de pollo (sin piel) por la mañana, 50g de arroz integral por la noche..." required></textarea>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="text-right">
+                    <a th:href="@{/gestion/dietas/duenos/{id}(id=${mascota.idUsuario})}" class="btn btn-secondary mr-2">Cancelar</a>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save mr-2"></i>Guardar Dieta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

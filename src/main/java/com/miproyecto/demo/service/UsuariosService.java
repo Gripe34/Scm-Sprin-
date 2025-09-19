@@ -20,4 +20,6 @@ public interface UsuariosService {
 
     //ELIMINAR USUARIOS POR ID
     void deleteUsuarios(Long idUsuarios);
+
+    List<UsuariosDTO> findDuenosByVeterinarioId(Long idVeterinario);
 }

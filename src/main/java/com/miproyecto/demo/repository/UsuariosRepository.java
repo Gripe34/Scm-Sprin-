@@ -2,6 +2,8 @@ package com.miproyecto.demo.repository;
 
 import com.miproyecto.demo.entity.Usuarios;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,5 +15,6 @@ public interface UsuariosRepository extends JpaRepository<Usuarios, Long> {
 
     Optional<Usuarios> findBycorreo(String correo);
     List<Usuarios> findByRolIdRol(Long idRol);
-
+    @Query("SELECT DISTINCT d.mascota.usuario FROM DiagnosticoDueno d WHERE d.veterinario.idVeterinario = :idVeterinario")
+    List<Usuarios> findDuenosByVeterinarioId(@Param("idVeterinario") Long idVeterinario);
 }

@@ -24,4 +24,5 @@ public interface MascotasService {
     List<MascotasDTO> obtenerMascotasPorDuenoId(Long duenoId);
     MascotasDTO crearMascota(MascotasDTO mascotaDTO);
     List<MascotasDTO>getAllMascotas();
+    List<MascotasDTO> findPacientesByVeterinarioId(Long idVeterinario);
 }
