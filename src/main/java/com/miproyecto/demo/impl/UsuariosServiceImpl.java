@@ -16,9 +16,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -28,13 +30,15 @@ public class UsuariosServiceImpl implements UsuariosService{
     private final UsuariosRepository usuariosRepository;
     private final RolesRepository rolesRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
 
-    public UsuariosServiceImpl(UsuariosRepository usuariosRepository,  ModelMapper modelMapper, RolesRepository rolesRepository){
+    public UsuariosServiceImpl(UsuariosRepository usuariosRepository,  ModelMapper modelMapper, RolesRepository rolesRepository, PasswordEncoder passwordEncoder) {
         this.usuariosRepository= usuariosRepository;
         this.rolesRepository = rolesRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,8 +51,27 @@ public class UsuariosServiceImpl implements UsuariosService{
 
     @Override
     public Page<UsuariosDTO> obtenerUsuariosConPaginacion(Pageable pageable) {
-        Page<Usuarios> usuariosPage = usuariosRepository.findAll(pageable);
-        return usuariosPage.map(usuario -> modelMapper.map(usuario, UsuariosDTO.class));
+        Page<Usuarios> clientesPage = usuariosRepository.findByRol_Rol("CLIENTE", pageable);
+        return clientesPage.map(usuario -> modelMapper.map(usuario, UsuariosDTO.class));
+    }
+
+    @Override
+    public String restablecerContrasena(Long idUsuario) {
+        Usuarios usuario = usuariosRepository.findById(idUsuario)
+                .orElseThrow(() -> new CustomException("Usuario no encontrado con id: " + idUsuario));
+
+        // 1. Genera una contraseña aleatoria
+        String nuevaContrasena = UUID.randomUUID().toString().substring(0, 8);
+
+        // 2. Encripta la nueva contraseña
+        String contrasenaEncriptada = passwordEncoder.encode(nuevaContrasena);
+
+        // 3. Asigna y guarda la contraseña encriptada
+        usuario.setContrasena(contrasenaEncriptada);
+        usuariosRepository.save(usuario);
+
+        // 4. Retorna la contraseña sin encriptar para mostrarla en la vista
+        return nuevaContrasena;
     }
 
 

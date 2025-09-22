@@ -24,6 +24,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 
@@ -142,7 +145,16 @@ public class UsuariosController {
         return "redirect:/login";
     }
 
-
+    @PostMapping("/restablecer-contrasena/{id}")
+    public String restablecerContrasena(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            String nuevaContrasena = usuariosService.restablecerContrasena(id);
+            redirectAttributes.addFlashAttribute("successMessage", "La contraseña se ha restablecido. La nueva es: " + nuevaContrasena);
+        } catch (CustomException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/gestionar/clientes"; // Redirige a la vista de gestión
+    }
 
     // Listar usuarios
     @GetMapping("/listar")

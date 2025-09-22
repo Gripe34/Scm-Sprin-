@@ -4,10 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${titulo}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/stilos.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body class="bg-light">
+
+<div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
+<div th:replace="~{fragments/barralateralA :: barralateralA}"></div>
+
+<div th:replace="~{fragments/barralateralA :: modalDiagnostico(
+            diagnosticoDTO=${diagnosticoDTO},
+            mascotas=${mascotas},
+            veterinarios=${veterinarios}
+        )}"></div>
+
 <div class="container my-5">
     <h1 class="text-center mb-4 text-primary" th:text="${titulo}"></h1>
 
@@ -22,20 +38,22 @@
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title text-purple" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"></h5>
-                        <p class="card-text"><strong>ID:</strong> <span th:text="${usuario.idUsuario}"></span></p>
                         <p class="card-text"><strong>Correo:</strong> <span th:text="${usuario.correo}"></span></p>
                         <p class="card-text"><strong>Teléfono:</strong> <span th:text="${usuario.telefono}"></span></p>
                     </div>
-                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
-                        <a th:href="@{/usuarios/editar/{id}(id=${usuario.idUsuario})}" class="btn btn-primary btn-sm">Actualizar</a>
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between flex-wrap">
+                        <a th:href="@{/usuarios/editar/{id}(id=${usuario.idUsuario})}" class="btn btn-primary btn-sm mb-2">Actualizar</a>
                         <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm mb-2">Eliminar</button>
                         </form>
                         <form th:action="@{/usuarios/bloquear/{id}(id=${usuario.idUsuario})}" method="post">
-                            <button type="submit" class="btn btn-warning btn-sm">
+                            <button type="submit" class="btn btn-warning btn-sm mb-2">
                                 <span th:if="${usuario.habilitado}">Bloquear</span>
                                 <span th:unless="${usuario.habilitado}">Desbloquear</span>
                             </button>
+                        </form>
+                        <form th:action="@{/usuarios/restablecer-contrasena/{id}(id=${usuario.idUsuario})}" method="post">
+                            <button type="submit" class="btn btn-blanco btn-sm mb-2">Restablecer Contraseña</button>
                         </form>
                     </div>
                 </div>
@@ -48,19 +66,23 @@
             <div class="col" th:each="veterinario : ${paginaDeUsuarios.content}">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-purple" th:text="${veterinario.nombre} + ' ' + ${veterinario.apellido}"></h5>
+                        <h5 class="card-title text-purple" th:text="${veterinario.usuario.nombre} + ' ' + ${veterinario.usuario.apellido}"></h5>
                         <p class="card-text"><strong>Especialidad:</strong> <span th:text="${veterinario.especialidad}"></span></p>
-                        <p class="card-text"><strong>ID:</strong> <span th:text="${veterinario.idVeterinario}"></span></p>
+                        <p class="card-text"><strong>Correo:</strong> <span th:text="${veterinario.usuario.correo}"></span></p>
                     </div>
-                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
-                        <a th:href="@{/veterinarios/editar/{id}(id=${veterinario.idVeterinario})}" class="btn btn-primary btn-sm">Actualizar</a>
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between flex-wrap">
+                        <a th:href="@{/veterinarios/editar/{id}(id=${veterinario.idVeterinario})}" class="btn btn-primary btn-sm mb-2">Actualizar</a>
                         <form th:action="@{/veterinarios/eliminar/{id}(id=${veterinario.idVeterinario})}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm mb-2">Eliminar</button>
                         </form>
                         <form th:action="@{/veterinarios/bloquear/{id}(id=${veterinario.idVeterinario})}" method="post">
-                            <button type="submit" class="btn btn-warning btn-sm">
-                                <span>Bloquear/Desbloquear</span>
+                            <button type="submit" class="btn btn-warning btn-sm mb-2">
+                                <span th:if="${veterinario.usuario.habilitado}">Bloquear</span>
+                                <span th:unless="${veterinario.usuario.habilitado}">Desbloquear</span>
                             </button>
+                        </form>
+                        <form th:action="@{/veterinarios/restablecer-contrasena/{id}(id=${veterinario.idVeterinario})}" method="post">
+                            <button type="submit" class="btn btn-blanco btn-sm mb-2">Restablecer Contraseña</button>
                         </form>
                     </div>
                 </div>

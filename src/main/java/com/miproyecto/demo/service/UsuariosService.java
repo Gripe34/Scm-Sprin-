@@ -13,6 +13,8 @@ public interface UsuariosService {
 
     Page<UsuariosDTO> obtenerUsuariosConPaginacion(Pageable pageable);
 
+    String restablecerContrasena(Long idUsuario);
+
     //OBTNER UN USUARIOS POR ID
     UsuariosDTO getUsuariosById(Long idUsuarios);
 

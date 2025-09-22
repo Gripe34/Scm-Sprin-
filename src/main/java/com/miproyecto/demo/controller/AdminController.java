@@ -59,7 +59,7 @@ public class AdminController {
             pagina = usuariosService.obtenerUsuariosConPaginacion(pageable);
             titulo = "Gestión de Clientes";
         } else if ("veterinarios".equals(tipo)) {
-            pagina = veterinarioService.obtenerVeterinariosConPaginacion(pageable); // Asumimos que el servicio ya devuelve una Page
+            pagina = veterinarioService.obtenerVeterinariosConPaginacion(pageable);
             titulo = "Gestión de Veterinarios";
         } else {
             // Manejar error o redireccionar a una página por defecto
