@@ -7,6 +7,8 @@ import com.miproyecto.demo.exceptions.CustomException;
 import com.miproyecto.demo.repository.RolesRepository;
 import com.miproyecto.demo.repository.UsuariosRepository;
 import com.miproyecto.demo.service.UsuariosService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,12 @@ public class UsuariosServiceImpl implements UsuariosService{
                 .toList();
     }
 
+    @Override
+    public Page<UsuariosDTO> obtenerUsuariosConPaginacion(Pageable pageable) {
+        Page<Usuarios> usuariosPage = usuariosRepository.findAll(pageable);
+        return usuariosPage.map(usuario -> modelMapper.map(usuario, UsuariosDTO.class));
+    }
+
 
     @Override
     public UsuariosDTO getUsuariosById(Long idUsuarios) {
@@ -64,33 +72,33 @@ public class UsuariosServiceImpl implements UsuariosService{
 
     @Override
     public UsuariosDTO updateUsuarios(Long idUsuarios, UsuariosDTO usuariosDTO) {
+        // 1. Encuentra el usuario existente
         Usuarios usuariosExistente = usuariosRepository.findById(idUsuarios)
                 .orElseThrow(() -> new CustomException("Usuario no encontrado con id: " + idUsuarios));
 
+        // 2. Actualiza los campos que no son la contraseña
         usuariosExistente.setNombre(usuariosDTO.getNombre());
         usuariosExistente.setApellido(usuariosDTO.getApellido());
         usuariosExistente.setCorreo(usuariosDTO.getCorreo());
-        usuariosExistente.setContrasena(usuariosDTO.getContrasena());
         usuariosExistente.setTelefono(usuariosDTO.getTelefono());
         usuariosExistente.setDireccion(usuariosDTO.getDireccion());
         usuariosExistente.setFoto(usuariosDTO.getFoto());
 
-        // Aquí asignas el rol usando el repositorio de Roles
+        // Solo actualiza la contraseña si no es nula y no está vacía.
+        if (usuariosDTO.getContrasena() != null && !usuariosDTO.getContrasena().isEmpty()) {
+            usuariosExistente.setContrasena(usuariosDTO.getContrasena());
+        }
+
+        // 4. Lógica del Rol (como ya la tienes)
         if (usuariosDTO.getIdRol() != null) {
             Roles rol = rolesRepository.findById(usuariosDTO.getIdRol())
                     .orElseThrow(() -> new CustomException("Rol no encontrado con id: " + usuariosDTO.getIdRol()));
             usuariosExistente.setRol(rol);
         }
 
-        // Guardar cambios
+        // 5. Guarda y mapea los cambios
         Usuarios actualizado = usuariosRepository.save(usuariosExistente);
-
-        // Mapear de vuelta a DTO
-        UsuariosDTO resp = modelMapper.map(actualizado, UsuariosDTO.class);
-        if (actualizado.getRol() != null) {
-            resp.setIdRol(actualizado.getRol().getIdRol());
-        }
-        return resp;
+        return modelMapper.map(actualizado, UsuariosDTO.class);
     }
 
 
@@ -99,6 +107,11 @@ public class UsuariosServiceImpl implements UsuariosService{
     public void deleteUsuarios(Long idUsuarios) {
         Usuarios usuarioExistente = usuariosRepository.findById(idUsuarios)
                 .orElseThrow(() -> new CustomException("Usuario no encontrado con id:" + idUsuarios));
+
+        if (usuarioExistente.getRol() != null && usuarioExistente.getRol().getIdRol() == 1L) {
+            throw new CustomException("No se puede eliminar un usuario administrador.");
+        }
+
         usuariosRepository.delete(usuarioExistente);
     }
 
@@ -111,4 +124,17 @@ public class UsuariosServiceImpl implements UsuariosService{
         return duenos.stream()
                 .map(dueno -> modelMapper.map(dueno, UsuariosDTO.class))
                 .collect(Collectors.toList());
-    }}
+    }
+
+    @Override
+    public void bloquearUsuario(Long idUsuario) {
+        Usuarios usuario = usuariosRepository.findById(idUsuario)
+                .orElseThrow(() -> new CustomException("Usuario no encontrado con id: " + idUsuario));
+
+        // Invierte el estado actual del usuario
+        usuario.setHabilitado(!usuario.isHabilitado());
+        usuariosRepository.save(usuario);
+    }
+
+
+}

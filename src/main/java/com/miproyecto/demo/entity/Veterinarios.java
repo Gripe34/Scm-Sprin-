@@ -17,6 +17,8 @@ public class Veterinarios {
 
 
 
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
     @Column(name = "Especialidad", nullable = false, length = 200)
     private String especialidad;
@@ -62,4 +64,7 @@ public class Veterinarios {
         this.usuario = usuario;
     }
 
+    public void setNombre(String nombre) {
+
+    }
 }

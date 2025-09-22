@@ -1,6 +1,8 @@
 package com.miproyecto.demo.service;
 
 import com.miproyecto.demo.dto.UsuariosDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.List;
 public interface UsuariosService {
     //OBTENER TODOS LOS  DATOS
     List<UsuariosDTO> findAllUsuarios();
+
+    Page<UsuariosDTO> obtenerUsuariosConPaginacion(Pageable pageable);
 
     //OBTNER UN USUARIOS POR ID
     UsuariosDTO getUsuariosById(Long idUsuarios);
@@ -22,4 +26,6 @@ public interface UsuariosService {
     void deleteUsuarios(Long idUsuarios);
 
     List<UsuariosDTO> findDuenosByVeterinarioId(Long idVeterinario);
+
+    void bloquearUsuario(Long idUsuario);
 }

@@ -13,6 +13,8 @@ import com.miproyecto.demo.service.UsuariosService;
 import com.miproyecto.demo.service.VeterinarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +33,24 @@ public class VeterinariosServiceImpl implements VeterinarioService {
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
     private final UsuariosService usuariosService;
-    private UsuariosRepository usuariosRepository;
+    private final UsuariosRepository usuariosRepository;
+
 
     @Autowired
-    public VeterinariosServiceImpl(VeterinarioRepository veterinarioRepository, ModelMapper modelMapper, UsuariosService usuariosService, PasswordEncoder passwordEncoder, RolesRepository rolesRepository,UsuariosRepository usuariosRepository){
+    public VeterinariosServiceImpl(VeterinarioRepository veterinarioRepository, ModelMapper modelMapper, UsuariosService usuariosService, PasswordEncoder passwordEncoder, RolesRepository rolesRepository,UsuariosRepository usuariosRepository) {
         this.veterinarioRepository = veterinarioRepository;
         this.modelMapper = modelMapper;
         this.usuariosService = usuariosService;
         this.passwordEncoder = passwordEncoder;
         this.rolesRepository = rolesRepository;
         this.usuariosRepository = usuariosRepository;
+    }
+
+
+    @Override
+    public Page<VeterinariosDTO> obtenerVeterinariosConPaginacion(Pageable pageable) {
+        Page<Veterinarios> veterinariosPage = veterinarioRepository.findAll(pageable);
+        return veterinariosPage.map(veterinario -> modelMapper.map(veterinario, VeterinariosDTO.class));
     }
 
     @Override
@@ -67,6 +77,7 @@ public class VeterinariosServiceImpl implements VeterinarioService {
         return dto;
     }
 
+
     @Override
     public VeterinariosDTO getVeterionarioById(Long idVeterinarios) {
         return veterinarioRepository.findById(idVeterinarios)
@@ -85,27 +96,21 @@ public class VeterinariosServiceImpl implements VeterinarioService {
         usuario.setApellido(veterinariosDTO.getApellido());
         usuario.setTelefono(veterinariosDTO.getTelefono());
         usuario.setDireccion(veterinariosDTO.getDireccion());
+        usuario.setHabilitado(true); // Se agrega para que por defecto se habilite
 
-        // Asignar el rol 'veterinario'
+
         Roles rolVeterinario = rolesRepository.findByRol("veterinario")
                 .orElseThrow(() -> new CustomException("El rol 'veterinario' no existe"));
         usuario.setRol(rolVeterinario);
-
-        // Guardar el usuario primero en su repositorio
         Usuarios usuarioGuardado = usuariosRepository.save(usuario);
 
-        // 2. Crear y guardar el objeto Veterinario
-        // Solo se setean los campos que están en la entidad Veterinarios
+
         Veterinarios veterinario = new Veterinarios();
         veterinario.setEspecialidad(veterinariosDTO.getEspecialidad());
-
-        // Enlazar el usuario recién guardado
+        veterinario.setNombre(veterinariosDTO.getNombre());
         veterinario.setUsuario(usuarioGuardado);
-
-        // Guardar la entidad Veterinario
         Veterinarios veterinarioGuardado = veterinarioRepository.save(veterinario);
 
-        // 3. Devolver el DTO
         return modelMapper.map(veterinarioGuardado, VeterinariosDTO.class);
     }
 

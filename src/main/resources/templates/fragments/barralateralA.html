@@ -1,4 +1,4 @@
-<div th:fragment="barralateralA" class="container-menu p-3">
+<div th:fragment="barralateralA" class="container-menu p-3" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="cont-menu">
         <label for="btn-menu" class="d-block mb-2">✖️</label>
 
@@ -14,8 +14,7 @@
                     <i class="fas fa-tasks me-2"></i>Gestionar
                 </button>
                 <ul class="dropdown-menu w-100" aria-labelledby="dropdownGestion">
-                    <li><a class="dropdown-item" th:href="@{/admin/gestionar-usuarios}">Usuarios   </a></li>
-                    <li><a class="dropdown-item" th:href="@{/admin/gestionar-mascotas}">Mascotas</a></li>
+                    <li><a class="dropdown-item" th:href="@{/admin/gestionar/clientes}">Gestionar dueño de mascota</a></li>
                 </ul>
             </li>
 

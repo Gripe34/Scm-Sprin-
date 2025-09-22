@@ -47,6 +47,9 @@ public class Usuarios {
     @Column(name = "foto", length = 200)
     private String foto;
 
+    @Column(columnDefinition = "boolean default true")
+    private boolean habilitado = true;
+
 
     // Getters
     public Long getIdUsuario() {
@@ -139,5 +142,13 @@ public class Usuarios {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
     }
 }

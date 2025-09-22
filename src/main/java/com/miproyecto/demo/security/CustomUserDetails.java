@@ -18,13 +18,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("Rol asignado: " + usuario.getRol().getRol());
-
         return Collections.singletonList(
                 new SimpleGrantedAuthority(usuario.getRol().getRol())
-
         );
-
     }
 
     @Override
@@ -54,7 +50,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return usuario.isHabilitado();
     }
 
     public Usuarios getUsuario() {

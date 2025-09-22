@@ -27,6 +27,8 @@ public class UsuariosDTO {
 
     private String foto;
 
+    private Boolean habilitado;
+
     public Long getIdUsuario() {
         return idUsuario;
     }

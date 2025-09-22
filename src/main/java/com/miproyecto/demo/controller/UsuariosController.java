@@ -23,6 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PostMapping;
 
 
 
@@ -48,6 +49,9 @@ public class UsuariosController {
         this.modelMapper = modelMapper;
         this.clienteRepository = clienteRepository;
     }
+
+
+
 
     // Obtener todos los usuarios
     @GetMapping("/all")
@@ -123,6 +127,7 @@ public class UsuariosController {
 
         // Guardar usuario primero
         Usuarios usuarioGuardado = usuariosRepository.save(usuario);
+        usuario.setHabilitado(true);
 
         // Crear la entidad Cliente vinculada al usuario recién guardado
         Cliente cliente = new Cliente();
@@ -147,20 +152,23 @@ public class UsuariosController {
     }
 
     //Eliminar usuario
-    @GetMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         usuariosService.deleteUsuarios(id);
         redirectAttributes.addFlashAttribute("successMessage", "Usuario eliminado exitosamente");
-        return "redirect:/usuarios/crear";
+        return "redirect:/admin/gestionar-usuarios";
     }
 
-    //EDITAR USUARIO
+  //EDITAR USUARIO
     @GetMapping("/editar/{id}")
-     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        UsuariosDTO usuarios = usuariosService.getUsuariosById(id);
-        model.addAttribute("usuario", usuarios);
-        model.addAttribute("usuarios", usuariosService.findAllUsuarios());
-        return "usuarios/editar"; // templates/usuarios/editar.html
+    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+        UsuariosDTO usuario = usuariosService.getUsuariosById(id);
+        model.addAttribute("usuario", usuario);
+
+        List<Roles> roles = rolesRepository.findAll();
+        model.addAttribute("roles", roles);
+
+        return "usuarios/editar";
     }
 
     @PostMapping("/editar/{id}")
@@ -176,7 +184,20 @@ public class UsuariosController {
         usuariosService.updateUsuarios(id, usuarioDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Usuario actualizado exitosamente");
 
-        return "redirect:/usuarios/crear";
+        return "redirect:/admin/gestionar-usuarios";
+    }
+
+
+    @PostMapping("/bloquear/{id}")
+    public String bloquearUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            usuariosService.bloquearUsuario(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Estado del usuario actualizado exitosamente.");
+        } catch (CustomException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        // Redirige de vuelta a la vista de gestión de usuarios
+        return "redirect:/admin/gestionar-usuarios";
     }
 
 }

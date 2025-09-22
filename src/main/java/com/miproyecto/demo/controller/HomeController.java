@@ -15,8 +15,8 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index() {
-        return "paginas/index"; // busca templates/paginas/index.html
+    public String mostrarIndex() {
+        return "paginas/index";
     }
 
 

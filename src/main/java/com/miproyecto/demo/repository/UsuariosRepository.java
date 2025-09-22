@@ -15,6 +15,8 @@ public interface UsuariosRepository extends JpaRepository<Usuarios, Long> {
 
     Optional<Usuarios> findBycorreo(String correo);
     List<Usuarios> findByRolIdRol(Long idRol);
+
     @Query("SELECT DISTINCT d.mascota.usuario FROM DiagnosticoDueno d WHERE d.veterinario.idVeterinario = :idVeterinario")
+
     List<Usuarios> findDuenosByVeterinarioId(@Param("idVeterinario") Long idVeterinario);
 }
