@@ -66,9 +66,9 @@
             <div class="col" th:each="veterinario : ${paginaDeUsuarios.content}">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-purple" th:text="${veterinario.usuario.nombre} + ' ' + ${veterinario.usuario.apellido}"></h5>
+                        <h5 class="card-title text-purple" th:text="${veterinario.nombre} + ' ' + ${veterinario.apellido}"></h5>
                         <p class="card-text"><strong>Especialidad:</strong> <span th:text="${veterinario.especialidad}"></span></p>
-                        <p class="card-text"><strong>Correo:</strong> <span th:text="${veterinario.usuario.correo}"></span></p>
+                        <p class="card-text"><strong>Correo:</strong> <span th:text="${veterinario.correo}"></span></p>
                     </div>
                     <div class="card-footer bg-transparent border-0 d-flex justify-content-between flex-wrap">
                         <a th:href="@{/veterinarios/editar/{id}(id=${veterinario.idVeterinario})}" class="btn btn-primary btn-sm mb-2">Actualizar</a>
@@ -77,8 +77,8 @@
                         </form>
                         <form th:action="@{/veterinarios/bloquear/{id}(id=${veterinario.idVeterinario})}" method="post">
                             <button type="submit" class="btn btn-warning btn-sm mb-2">
-                                <span th:if="${veterinario.usuario.habilitado}">Bloquear</span>
-                                <span th:unless="${veterinario.usuario.habilitado}">Desbloquear</span>
+                                <span th:if="${veterinario.habilitado}">Bloquear</span>
+                                <span th:unless="${veterinario.habilitado}">Desbloquear</span>
                             </button>
                         </form>
                         <form th:action="@{/veterinarios/restablecer-contrasena/{id}(id=${veterinario.idVeterinario})}" method="post">

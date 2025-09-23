@@ -49,8 +49,31 @@ public class VeterinariosServiceImpl implements VeterinarioService {
 
     @Override
     public Page<VeterinariosDTO> obtenerVeterinariosConPaginacion(Pageable pageable) {
+        // 1. Obtiene la página de entidades de la base de datos.
         Page<Veterinarios> veterinariosPage = veterinarioRepository.findAll(pageable);
-        return veterinariosPage.map(veterinario -> modelMapper.map(veterinario, VeterinariosDTO.class));
+
+        // 2. Convierte cada entidad a un DTO de forma manual.
+        return veterinariosPage.map(veterinario -> {
+            VeterinariosDTO dto = new VeterinariosDTO();
+
+            // 3. Asigna los campos del veterinario directamente al DTO.
+            dto.setIdVeterinario(veterinario.getIdVeterinario());
+            dto.setEspecialidad(veterinario.getEspecialidad());
+
+            // 4. Asigna los campos del usuario al DTO, manejando el caso nulo.
+            if (veterinario.getUsuario() != null) {
+                dto.setNombre(veterinario.getUsuario().getNombre());
+                dto.setApellido(veterinario.getUsuario().getApellido());
+                dto.setTelefono(veterinario.getUsuario().getTelefono());
+                dto.setCorreo(veterinario.getUsuario().getCorreo());
+                dto.setDireccion(veterinario.getUsuario().getDireccion());
+
+                // ¡Aquí está la línea que faltaba!
+                dto.setHabilitado(veterinario.getUsuario().isHabilitado());
+            }
+
+            return dto;
+        });
     }
 
     @Override
