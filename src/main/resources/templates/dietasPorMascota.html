@@ -15,76 +15,77 @@
 <body>
 
 <div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
 <div th:replace="~{fragments/barralateralD :: barralateralD}"></div>
 
-<main class="container mt-5">
+<div class="capa">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="section-title h1" th:if="${not dietas.isEmpty()}" th:text="'Plan de Dieta para ' + ${dietas[0].nombreMascota}">Plan de Dieta</h1>
-        <h1 class="section-title h1" th:if="${dietas.isEmpty()}">Plan de Dieta</h1>
-        <a th:href="@{/dietas/seleccionar-mascota}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left mr-2"></i>Volver a Mis Mascotas
-        </a>
-    </div>
+    <main class="container mt-5">
 
-    <div class="row">
-        <div th:if="${not dietas.isEmpty()}" class="col-12">
-            <div th:each="dieta : ${dietas}" class="card mb-4 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="my-0 font-weight-normal" th:text="${dieta.tipoDieta}">Tipo de Dieta</h4>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="section-title h1" th:if="${not dietas.isEmpty()}" th:text="'Plan de Dieta para ' + ${dietas[0].nombreMascota}">Plan de Dieta</h1>
+            <h1 class="section-title h1" th:if="${dietas.isEmpty()}">Plan de Dieta</h1>
+            <a th:href="@{/dietas/seleccionar-mascota}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left mr-2"></i>Volver a Mis Mascotas
+            </a>
+        </div>
+
+        <div class="row">
+            <div th:if="${not dietas.isEmpty()}" class="col-12">
+                <div th:each="dieta : ${dietas}" class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="my-0 font-weight-normal" th:text="${dieta.tipoDieta}">Tipo de Dieta</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text" th:text="${dieta.descripcion}">Descripción general de la dieta.</p>
+                        <hr>
+                        <h5>Plan Específico:</h5>
+                        <p class="card-text" th:text="${dieta.dieta}">Detalles del plan de alimentación...</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>🩺 Asignado por: Dr. <span th:text="${dieta.nombreVeterinario}"></span></small>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text" th:text="${dieta.descripcion}">Descripción general de la dieta.</p>
-                    <hr>
-                    <h5>Plan Específico:</h5>
-                    <p class="card-text" th:text="${dieta.dieta}">Detalles del plan de alimentación...</p>
-                </div>
-                <div class="card-footer text-muted">
-                    <small>🩺 Asignado por: Dr. <span th:text="${dieta.nombreVeterinario}"></span></small>
+            </div>
+
+            <div th:unless="${not dietas.isEmpty()}" class="col-12">
+                <div class="alert alert-info text-center">
+                    Esta mascota aún no tiene ninguna dieta registrada.
                 </div>
             </div>
         </div>
 
-        <div th:unless="${not dietas.isEmpty()}" class="col-12">
-            <div class="alert alert-info text-center">
-                Esta mascota aún no tiene ninguna dieta registrada.
-            </div>
+        <div class="mt-5">
+            <h2 class="text-center section-title h1">Calendario de Notas</h2>
+            <p class="text-center lead" style="color: #555;">Haz clic en un día para agregar un recordatorio personal sobre la dieta de tu mascota.</p>
+            <div id="calendar" class="p-3 bg-white rounded shadow-sm"></div>
         </div>
-    </div>
+    </main>
 
-    <div class="mt-5">
-        <h2 class="text-center section-title h1">Calendario de Notas</h2>
-        <p class="text-center lead" style="color: #555;">Haz clic en un día para agregar un recordatorio personal sobre la dieta de tu mascota.</p>
-        <div id="calendar" class="p-3 bg-white rounded shadow-sm"></div>
-    </div>
-</main>
-
-<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="eventModalLabel">Añadir Nota para el <span id="eventDateDisplay"></span></h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="eventTitle">Descripción de la nota:</label>
-                    <textarea class="form-control" id="eventTitle" rows="4" placeholder="Ej: 'Comprar pollo', 'Dar media porción en la mañana'..."></textarea>
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="eventModalLabel">Añadir Nota para el <span id="eventDateDisplay"></span></h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <small class="form-text text-muted">Esta nota se guardará localmente en tu calendario.</small>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-info" id="saveEventBtn">Guardar Nota</button>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="eventTitle">Descripción de la nota:</label>
+                        <textarea class="form-control" id="eventTitle" rows="4" placeholder="Ej: 'Comprar pollo', 'Dar media porción en la mañana'..."></textarea>
+                    </div>
+                    <small class="form-text text-muted">Esta nota se guardará localmente en tu calendario.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-info" id="saveEventBtn">Guardar Nota</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</div> <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
