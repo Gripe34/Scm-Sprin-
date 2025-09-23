@@ -24,6 +24,14 @@
             veterinarios=${veterinarios}
         )}"></div>
 
+<div th:if="${successMessage}" class="alert alert-success" role="alert">
+    <span th:text="${successMessage}"></span>
+</div>
+
+<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <span th:text="${errorMessage}"></span>
+</div>
+
 <div class="container my-5">
     <h1 class="text-center mb-4 text-primary" th:text="${titulo}"></h1>
 

@@ -12,4 +12,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Optional<Cliente> findByUsuarioIdUsuario(Long idUsuario);
 
     boolean existsByUsuarioIdUsuario(Long idUsuario);
+
+    void deleteByUsuario_IdUsuario(Long idUsuario);
+
 }

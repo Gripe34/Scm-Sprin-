@@ -4,9 +4,11 @@ import com.miproyecto.demo.dto.UsuariosDTO;
 import com.miproyecto.demo.entity.Roles;
 import com.miproyecto.demo.entity.Usuarios;
 import com.miproyecto.demo.exceptions.CustomException;
+import com.miproyecto.demo.repository.ClienteRepository;
 import com.miproyecto.demo.repository.RolesRepository;
 import com.miproyecto.demo.repository.UsuariosRepository;
 import com.miproyecto.demo.service.UsuariosService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,14 +33,16 @@ public class UsuariosServiceImpl implements UsuariosService{
     private final RolesRepository rolesRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
 
-    public UsuariosServiceImpl(UsuariosRepository usuariosRepository,  ModelMapper modelMapper, RolesRepository rolesRepository, PasswordEncoder passwordEncoder) {
+    public UsuariosServiceImpl(UsuariosRepository usuariosRepository,  ModelMapper modelMapper, RolesRepository rolesRepository, PasswordEncoder passwordEncoder, ClienteRepository clienteRepository) {
         this.usuariosRepository= usuariosRepository;
         this.rolesRepository = rolesRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.clienteRepository = clienteRepository;
     }
 
     @Override
@@ -127,6 +131,7 @@ public class UsuariosServiceImpl implements UsuariosService{
 
 
     @Override
+    @Transactional
     public void deleteUsuarios(Long idUsuarios) {
         Usuarios usuarioExistente = usuariosRepository.findById(idUsuarios)
                 .orElseThrow(() -> new CustomException("Usuario no encontrado con id:" + idUsuarios));
@@ -135,6 +140,10 @@ public class UsuariosServiceImpl implements UsuariosService{
             throw new CustomException("No se puede eliminar un usuario administrador.");
         }
 
+        // Esta es la línea corregida: Usa el ClienteRepository para eliminar el registro hijo primero.
+        clienteRepository.deleteByUsuario_IdUsuario(idUsuarios);
+
+        // Luego, elimina el registro padre.
         usuariosRepository.delete(usuarioExistente);
     }
 

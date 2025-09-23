@@ -73,5 +73,19 @@ public class AdminController {
         return "admin/gestionar-usuarios";
     }
 
+    @GetMapping("/gestionar-usuarios")
+    public String gestionarUsuariosPorDefecto(Model model, Pageable pageable) {
+        // La variable ahora coincide con el tipo de retorno del servicio
+        Page<UsuariosDTO> pagina = usuariosService.obtenerUsuariosConPaginacion(pageable);
+        String titulo = "Gestión de Clientes";
+        String tipoActual = "clientes";
+
+        model.addAttribute("paginaDeUsuarios", pagina);
+        model.addAttribute("titulo", titulo);
+        model.addAttribute("tipoActual", tipoActual);
+
+        return "admin/gestionar-usuarios";
+    }
+
 
 }
