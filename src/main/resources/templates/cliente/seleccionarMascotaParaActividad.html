@@ -12,36 +12,45 @@
 <body>
 
 <div th:replace="~{fragments/menuV :: menuV}"></div>
+<input type="checkbox" id="btn-menu">
 <div th:replace="~{fragments/barralateralD :: barralateralD}"></div>
 
-<main class="container mt-5">
-    <div class="text-center mb-4">
-        <h1 class="section-title h1">Mis Mascotas</h1>
-        <p class="lead" style="color: #555;">Selecciona una mascota para consultar su plan de actividad física.</p>
-    </div>
+<div class="capa">
 
-    <div class="text-center mb-4">
-        <a th:href="@{/cliente/index}" class="btn btn-secondary">
+    <main class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="section-title h1">Mis Mascotas</h1>
+            <p class="lead" style="color: #555;">Selecciona una mascota para consultar su plan de actividad física.</p>
+        </div>
+
+        <div class="text-center mb-4">
+
+            <a th:href="@{/cliente/index}" class="btn btn-secondary">
             <i class="fas fa-arrow-left mr-2"></i>Volver al Panel
         </a>
-    </div>
+        </div>
 
-    <div class="page-cards-container">
-        <div th:if="${not mascotas.isEmpty()}">
-            <div th:each="mascota : ${mascotas}" class="page-card">
-                <img th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}" th:alt="'Foto de ' + ${mascota.nombre}">
-                <div class="page-card-body">
+        <div class="page-cards-container">
+            <div th:if="${not mascotas.isEmpty()}">
+                <div th:each="mascota : ${mascotas}" class="page-card">
+                    <img th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}" th:alt="'Foto de ' + ${mascota.nombre}">
+
+                    <div class="page-card-body">
                     <h4 th:text="${mascota.nombre}"></h4>
                     <p th:text="'Raza: ' + ${mascota.raza}"></p>
                     <a th:href="@{/actividades/mascota/{id}(id=${mascota.idMascota})}" class="btn btn-primary">Ver Actividad</a>
                 </div>
+
+                </div>
             </div>
+            <div th:unless="${not mascotas.isEmpty()}" class="alert alert-info w-100 text-center">
+            No tienes mascotas registradas.
+            <a th:href="@{/mascotas/crear}">¡Añade tu primera mascota aquí!</a>
         </div>
-        <div th:unless="${not mascotas.isEmpty()}" class="alert alert-info w-100 text-center">
-            No tienes mascotas registradas. <a th:href="@{/mascotas/crear}">¡Añade tu primera mascota aquí!</a>
         </div>
-    </div>
-</main>
+    </main>
+
+</div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
