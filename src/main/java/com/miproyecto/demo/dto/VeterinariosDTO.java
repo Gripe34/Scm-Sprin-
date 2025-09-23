@@ -11,7 +11,7 @@ public class VeterinariosDTO {
 
     private Long idVeterinario;
 
-    private String nombre;
+private String nombre;
 
     private String apellido;
 

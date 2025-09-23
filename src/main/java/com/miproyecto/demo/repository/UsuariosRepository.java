@@ -24,4 +24,6 @@ public interface UsuariosRepository extends JpaRepository<Usuarios, Long> {
 
     Page<Usuarios> findByRol_Rol(String rol, Pageable pageable);
 
+    boolean findByCorreo(String gonorrea);
+    boolean existsByCorreo(String correo);
 }

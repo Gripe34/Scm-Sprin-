@@ -68,6 +68,7 @@ public class VeterinariosServiceImpl implements VeterinarioService {
         if (veterinario.getUsuario() != null) {
             Usuarios usuario = veterinario.getUsuario();
             dto.setNombre(usuario.getNombre());
+
             dto.setApellido(usuario.getApellido());
             dto.setIdUsuario(usuario.getIdUsuario());
             dto.setCorreo(usuario.getCorreo());
@@ -92,6 +93,7 @@ public class VeterinariosServiceImpl implements VeterinarioService {
         Usuarios usuario = new Usuarios();
         usuario.setCorreo(veterinariosDTO.getCorreo());
         usuario.setContrasena(passwordEncoder.encode(veterinariosDTO.getContrasena()));
+
         usuario.setNombre(veterinariosDTO.getNombre());
         usuario.setApellido(veterinariosDTO.getApellido());
         usuario.setTelefono(veterinariosDTO.getTelefono());
@@ -107,7 +109,7 @@ public class VeterinariosServiceImpl implements VeterinarioService {
 
         Veterinarios veterinario = new Veterinarios();
         veterinario.setEspecialidad(veterinariosDTO.getEspecialidad());
-        veterinario.setNombre(veterinariosDTO.getNombre());
+
         veterinario.setUsuario(usuarioGuardado);
         Veterinarios veterinarioGuardado = veterinarioRepository.save(veterinario);
 
