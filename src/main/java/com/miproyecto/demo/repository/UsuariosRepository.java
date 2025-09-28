@@ -26,4 +26,14 @@ public interface UsuariosRepository extends JpaRepository<Usuarios, Long> {
 
     boolean findByCorreo(String gonorrea);
     boolean existsByCorreo(String correo);
+    @Query("SELECT DISTINCT d.mascota.usuario FROM DiagnosticoDueno d " +
+            "WHERE d.veterinario.idVeterinario = :idVeterinario " +
+            "AND (:#{#nombre} IS NULL OR :#{#nombre} = '' OR LOWER(d.mascota.usuario.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))) " +
+            "AND (:#{#apellido} IS NULL OR :#{#apellido} = '' OR LOWER(d.mascota.usuario.apellido) LIKE LOWER(CONCAT('%', :apellido, '%'))) " +
+            "AND (:#{#correo} IS NULL OR :#{#correo} = '' OR LOWER(d.mascota.usuario.correo) LIKE LOWER(CONCAT('%', :correo, '%')))")
+    List<Usuarios> findDuenosByVeterinarioConFiltros(@Param("idVeterinario") Long idVeterinario,
+                                                     @Param("nombre") String nombre,
+                                                     @Param("apellido") String apellido,
+                                                     @Param("correo") String correo);
+
 }

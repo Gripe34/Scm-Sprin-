@@ -8,18 +8,21 @@ import com.miproyecto.demo.entity.Usuarios;
 import com.miproyecto.demo.entity.Veterinarios;
 import com.miproyecto.demo.repository.UsuariosRepository;
 import com.miproyecto.demo.repository.VeterinarioRepository;
-import com.miproyecto.demo.service.ActividadFisicaService;
-import com.miproyecto.demo.service.DietasService;
-import com.miproyecto.demo.service.MascotasService;
-import com.miproyecto.demo.service.UsuariosService;
+import com.miproyecto.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/gestion")
@@ -46,14 +49,19 @@ public class GestionVeterinarioController {
 
     // Paso 1: Muestra la lista de dueños de pacientes
     @GetMapping("/dietas/duenos")
-    public String mostrarDuenosParaDieta(Model model, Authentication auth) {
+    public String mostrarDuenosParaDieta(Model model, Authentication auth,
+                                         @RequestParam(required = false) String nombre,
+                                         @RequestParam(required = false) String apellido,
+                                         @RequestParam(required = false) String correo) {
         Veterinarios veterinario = getVeterinarioLogueado(auth);
-
-        // Llama al método del servicio
-        List<UsuariosDTO> duenos = usuariosService.findDuenosByVeterinarioId(veterinario.getIdVeterinario());
+        List<UsuariosDTO> duenos = usuariosService.findDuenosByVeterinarioId(veterinario.getIdVeterinario(), nombre, apellido, correo);
 
         model.addAttribute("duenos", duenos);
         model.addAttribute("tipoGestion", "dietas");
+        // Devolvemos los parámetros a la vista para que los campos no se borren
+        model.addAttribute("nombre", nombre);
+        model.addAttribute("apellido", apellido);
+        model.addAttribute("correo", correo);
         return "veterinarios/listarDuenos";
     }
 
@@ -92,11 +100,25 @@ public class GestionVeterinarioController {
 
     // Paso 1: Muestra la lista de dueños de pacientes
     @GetMapping("/actividades/duenos")
-    public String mostrarDuenosParaActividad(Model model, Authentication auth) {
+    public String mostrarDuenosParaActividad(Model model, Authentication auth,
+                                             @RequestParam(required = false) String nombre,
+                                             @RequestParam(required = false) String apellido,
+                                             @RequestParam(required = false) String correo) {
+
+        // 1. Obtiene el veterinario que ha iniciado sesión
         Veterinarios veterinario = getVeterinarioLogueado(auth);
-        List<UsuariosDTO> duenos = usuariosService.findDuenosByVeterinarioId(veterinario.getIdVeterinario());
+
+        // 2. Llama al servicio pasándole todos los filtros (pueden ser nulos o vacíos)
+        List<UsuariosDTO> duenos = usuariosService.findDuenosByVeterinarioId(veterinario.getIdVeterinario(), nombre, apellido, correo);
+
+        // 3. Agrega los resultados y los parámetros de búsqueda al modelo
         model.addAttribute("duenos", duenos);
         model.addAttribute("tipoGestion", "actividades");
+        model.addAttribute("nombre", nombre);
+        model.addAttribute("apellido", apellido);
+        model.addAttribute("correo", correo);
+
+        // 4. Devuelve la vista que mostrará la lista de dueños
         return "veterinarios/listarDuenos";
     }
 
@@ -138,5 +160,30 @@ public class GestionVeterinarioController {
     private Veterinarios getVeterinarioLogueado(Authentication auth) {
         Usuarios usuario = usuariosRepository.findBycorreo(auth.getName()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return veterinarioRepository.findByUsuario(usuario).orElseThrow(() -> new RuntimeException("Perfil de veterinario no encontrado"));
+    }
+    @Autowired
+    private PdfGenerationService pdfGenerationService; // Inyecta el nuevo servicio
+    @GetMapping("/duenos/reporte/pdf")
+    public ResponseEntity<byte[]> generarReportePdf(Authentication auth,
+                                                    @RequestParam(required = false) String nombre,
+                                                    @RequestParam(required = false) String apellido,
+                                                    @RequestParam(required = false) String correo) {
+        // 1. Obtiene los mismos datos filtrados que la vista de lista
+        Veterinarios veterinario = getVeterinarioLogueado(auth);
+        List<UsuariosDTO> duenos = usuariosService.findDuenosByVeterinarioId(veterinario.getIdVeterinario(), nombre, apellido, correo);
+
+        // 2. Prepara los datos para la plantilla
+        Map<String, Object> datosParaPdf = new HashMap<>();
+        datosParaPdf.put("duenos", duenos);
+
+        // 3. Llama al servicio para generar el PDF
+        byte[] pdfBytes = pdfGenerationService.generarPdfDesdeHtml("reportes/reporteDuenosMascotas", datosParaPdf);
+
+        // 4. Prepara las cabeceras para la descarga del archivo
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "reporte_duenos.pdf");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 }

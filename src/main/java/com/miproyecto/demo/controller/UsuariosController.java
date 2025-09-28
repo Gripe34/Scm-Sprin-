@@ -168,7 +168,7 @@ public class UsuariosController {
     public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         usuariosService.deleteUsuarios(id);
         redirectAttributes.addFlashAttribute("successMessage", "Usuario eliminado exitosamente");
-        return "redirect:/admin/gestionar-usuarios";
+        return "redirect:/admin/gestionar/clientes";
     }
 
   //EDITAR USUARIO
@@ -196,7 +196,7 @@ public class UsuariosController {
         usuariosService.updateUsuarios(id, usuarioDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Usuario actualizado exitosamente");
 
-        return "redirect:/admin/gestionar-usuarios";
+        return "redirect:/admin/gestionar/clientes";
     }
 
 
@@ -209,7 +209,7 @@ public class UsuariosController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         // Redirige de vuelta a la vista de gestión de usuarios
-        return "redirect:/admin/gestionar-usuarios";
+        return "redirect:/admin/gestionar/clientes";
     }
 
 }

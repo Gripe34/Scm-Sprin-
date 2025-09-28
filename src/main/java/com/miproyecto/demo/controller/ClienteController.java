@@ -37,11 +37,7 @@ public class ClienteController {
         this.citasService = citasService;
     }
 
-    /**
-     * ESTE MÉTODO ES LA SOLUCIÓN.
-     * Se ejecuta ANTES de cualquier @GetMapping en este controlador.
-     * Prepara y añade todos los datos comunes al modelo.
-     */
+
     @ModelAttribute
     public void addCommonAttributes(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {

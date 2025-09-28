@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Reporte de Dueños y Mascotas</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { color: #007bff; }
+        .owner-section { border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 15px; page-break-inside: avoid; }
+        .owner-section h3 { background-color: #f2f2f2; padding: 5px; border-radius: 3px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Reporte de Dueños y Mascotas</h1>
+    <p>Generado el: <span th:text="${#dates.format(#dates.createNow(), 'dd-MM-yyyy HH:mm')}"></span></p>
+</div>
+
+<div th:each="dueno : ${duenos}">
+    <div class="owner-section">
+        <h3 th:text="${dueno.nombre} + ' ' + ${dueno.apellido}">Nombre del Dueño</h3>
+        <p><strong>Email:</strong> <span th:text="${dueno.correo}"></span> | <strong>Teléfono:</strong> <span th:text="${dueno.telefono}"></span></p>
+
+        <h4>Mascotas Registradas:</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Raza</th>
+                <th>Género</th>
+                <th>Fecha de Nacimiento</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mascota : ${dueno.mascotas}">
+                <td th:text="${mascota.nombre}"></td>
+                <td th:text="${mascota.raza}"></td>
+                <td th:text="${mascota.genero}"></td>
+                <td th:text="${#temporals.format(mascota.fechaNacimiento, 'dd-MM-yyyy')}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(dueno.mascotas)}">
+                <td colspan="4" style="text-align: center;">Este dueño no tiene mascotas registradas.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

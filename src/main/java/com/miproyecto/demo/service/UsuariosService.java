@@ -30,4 +30,5 @@ public interface UsuariosService {
     List<UsuariosDTO> findDuenosByVeterinarioId(Long idVeterinario);
 
     void bloquearUsuario(Long idUsuario);
+    List<UsuariosDTO> findDuenosByVeterinarioId(Long idVeterinario, String nombre, String apellido, String correo);
 }
