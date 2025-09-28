@@ -28,6 +28,11 @@
             <li class="nav-item mt-auto">
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/comunicaciones}">
+                            <i class="fas fa-envelope-open-text mr-2"></i>Correos Masivos
+                        </a>
+                    </li>
                 </form>
             </li>
         </ul>

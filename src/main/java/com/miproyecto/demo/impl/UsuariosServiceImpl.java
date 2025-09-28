@@ -179,4 +179,14 @@ public class UsuariosServiceImpl implements UsuariosService {
         usuario.setHabilitado(!usuario.isHabilitado());
         usuariosRepository.save(usuario);
     }
+    @Override
+    public List<UsuariosDTO> findAllByIds(List<Long> ids) {
+        // Llama al método que ya existe en JpaRepository
+        List<Usuarios> usuarios = usuariosRepository.findAllById(ids);
+
+        // Convierte la lista de entidades a DTOs
+        return usuarios.stream()
+                .map(usuario -> modelMapper.map(usuario, UsuariosDTO.class))
+                .collect(Collectors.toList());
+    }
 }
